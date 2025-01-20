@@ -15,4 +15,6 @@ func main() {
 	parsedTime, _ := time.Parse(time.ANSIC, "Fri Mar 28 00:00:00 1975")
 	fmt.Printf("Parsed time type %T\n", parsedTime)
 
+	tomorrow := time.Now().AddDate(0, 0, 1)
+	fmt.Println("Tomorrow is:", tomorrow.Format(time.DateOnly))
 }
