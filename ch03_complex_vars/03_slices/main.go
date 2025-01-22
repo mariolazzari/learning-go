@@ -10,6 +10,13 @@ func main() {
 	var colors = []string{"Red", "Green", "Blue"}
 	fmt.Println(colors)
 
+	// create slice with make
+	var colors2 = make([]string, 0, 3)
+	fmt.Println("Make slice", colors2)
+	// append multiple elements
+	colors2 = append(colors2, "Red", "Green", "Blue")
+	fmt.Println("Append miltiple", colors2)
+
 	// add element to slice (returns new slice)
 	colors = append(colors, "Black")
 	fmt.Println(colors)
@@ -20,6 +27,9 @@ func main() {
 
 	// remove last imte
 	colors = colors[:len(colors)-1]
+	fmt.Println(colors)
+
+	colors = remove(colors, 1)
 	fmt.Println(colors)
 
 	// init slice with make
@@ -38,4 +48,9 @@ func main() {
 	sort.Ints(numbers)
 	fmt.Println(numbers)
 
+}
+
+// remove element from slice
+func remove(slice []string, i int) []string {
+	return append(slice[:i], slice[i+1:]...)
 }

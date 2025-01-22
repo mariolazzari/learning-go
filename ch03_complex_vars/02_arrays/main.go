@@ -13,6 +13,8 @@ func main() {
 	// init array
 	var numbers = [5]int16{1, 2, 3, 4, 5}
 	fmt.Println(numbers)
+
+	// len global function
 	fmt.Println("Total numbers:", len(numbers))
 
 }

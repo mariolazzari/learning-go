@@ -4,7 +4,11 @@ import "fmt"
 
 func main() {
 	var p *int
-	fmt.Println("Value of  p:", p)
+	// fmt.Println("Value of  p:", p)
+	if p == nil {
+		fmt.Println("Pointer is nil")
+	}
+
 	// fmt.Println("Value of *p:", *p) -> error
 
 	anInt := 42
