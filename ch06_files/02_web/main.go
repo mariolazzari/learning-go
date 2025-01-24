@@ -6,21 +6,26 @@ import (
 	"net/http"
 )
 
-const url = "https://jsonplaceholder.typicode.com/todos"
+const url = "http://services.explorecalifornia.org/json/tours.php"
 
 func main() {
-	res, err := http.Get(url)
+	fmt.Println("Network requests")
+	client := http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
 	checkError(err)
 
-	fmt.Printf("response type: %T\n", res)
-	defer res.Body.Close()
+	req.Header.Set("User-Agent", "")
 
-	bytes, err := io.ReadAll(res.Body)
+	resp, err := client.Do(req)
 	checkError(err)
+	defer resp.Body.Close()
 
+	fmt.Printf("Response type:%T\n", resp)
+
+	bytes, err := io.ReadAll(resp.Body)
+	checkError(err)
 	content := string(bytes)
-	fmt.Println(content)
-
+	fmt.Print(content)
 }
 
 func checkError(err error) {
