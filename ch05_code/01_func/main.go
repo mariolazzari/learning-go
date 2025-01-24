@@ -14,7 +14,6 @@ func doSomething() {
 
 	sum, _ = addAllValues(1, 2, 3, 4)
 	fmt.Println(sum)
-
 }
 
 func addValues(val1, val2 int) int {
@@ -26,6 +25,5 @@ func addAllValues(vals ...int) (int, int) {
 	for _, v := range vals {
 		total += v
 	}
-
 	return total, len(vals)
 }
