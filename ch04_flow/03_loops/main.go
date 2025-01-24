@@ -21,6 +21,16 @@ func main() {
 		fmt.Println(color)
 	}
 
+	// range with map
+	states := make(map[string]string)
+	states["WA"] = "Washington"
+	states["OR"] = "Oregon"
+	states["CA"] = "California"
+
+	for key, value := range states {
+		fmt.Println(key, value)
+	}
+
 	// while
 	value := 0
 	for value < 10 {
