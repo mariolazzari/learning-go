@@ -218,3 +218,7 @@ fmt.Println(total)
 - After the for loop, print out the value of total.
 - What is printed out?
 - What is the likely bug in this code?
+
+## Functions
+
+### Funcitons ex1
