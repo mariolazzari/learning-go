@@ -45,8 +45,8 @@ clean:
 
 ### Types ex1
 
-- Write a program that declares an integer variable called i with the value 20. 
-- Assign i to a floating-point variable named f. 
+- Write a program that declares an integer variable called i with the value 20.
+- Assign i to a floating-point variable named f.
 - Print out i and f.
 
 ```go
@@ -64,8 +64,8 @@ func main() {
 
 ### Types ex2
 
-- Write a program that declares a constant called value that can be assigned to both an integer and a floating-point variable. 
-- Assign it to an integer called i and a floating-point variable called f. 
+- Write a program that declares a constant called value that can be assigned to both an integer and a floating-point variable.
+- Assign it to an integer called i and a floating-point variable called f.
 - Print out i and f.
 
 ```go
@@ -84,9 +84,9 @@ func main() {
 
 ### Types ex 3
 
-- Write a program with three variables, one named b of type byte, one named smallI of type int32, and one named bigI of type uint64. 
-- Assign each variable the maximum legal value for its type; 
-- then add 1 to each variable. 
+- Write a program with three variables, one named b of type byte, one named smallI of type int32, and one named bigI of type uint64.
+- Assign each variable the maximum legal value for its type;
+- then add 1 to each variable.
 - Print out their values.
 
 ```go
@@ -117,10 +117,10 @@ func main() {
 
 ### Composite types ex1
 
-- Write a program that defines a variable named greetings of type slice of strings with the following values: "Hello", "Hola", "नमस्कार", "こんにちは", and "Привіт". 
-- Create a subslice containing the first two values; 
-- a second subslice with the second, third, and fourth values; 
-- and a third subslice with the fourth and fifth values. 
+- Write a program that defines a variable named greetings of type slice of strings with the following values: "Hello", "Hola", "नमस्कार", "こんにちは", and "Привіт".
+- Create a subslice containing the first two values;
+- a second subslice with the second, third, and fourth values;
+- and a third subslice with the fourth and fifth values.
 - Print out all four slices.
 
 ```go
@@ -142,7 +142,7 @@ func main() {
 
 ### Composite types ex2
 
-- Write a program that defines a string variable called message with the value "Hi 😂 and 😭" 
+- Write a program that defines a string variable called message with the value "Hi 😂 and 😭"
 - and prints the fourth rune in it as a character, not a number.
 
 ```go
@@ -162,9 +162,59 @@ func main() {
 
 ### Composite types ex3
 
-- Write a program that defines a struct called Employee with three fields: firstName, lastName, and id. 
-- The first two fields are of type string, and the last field (id) is of type int. 
-- Create three instances of this struct using whatever values you’d like. 
-- Initialize the first one using the struct literal style without names, the second using the struct literal style with names, and the third with a var declaration. 
-- Use dot notation to populate the fields in the third struct. 
+- Write a program that defines a struct called Employee with three fields: firstName, lastName, and id.
+- The first two fields are of type string, and the last field (id) is of type int.
+- Create three instances of this struct using whatever values you’d like.
+- Initialize the first one using the struct literal style without names, the second using the struct literal style with names, and the third with a var declaration.
+- Use dot notation to populate the fields in the third struct.
 - Print out all three structs.
+
+## Controls
+
+### Controls ex1
+
+- Write a for loop that puts 100 random numbers between 0 and 100 into an int slice.
+
+```go
+package main
+
+import (
+	"fmt"
+	"math/rand/v2"
+)
+
+func main() {
+	ints := make([]int, 100)
+
+	for i := 0; i < 100; i++ {
+		ints[i] = rand.IntN(100)
+	}
+
+	fmt.Println("ints:", ints)
+}
+```
+
+### Controls ex2
+
+- Loop over the slice you created in exercise 1.
+- For each value in the slice, apply the following rules:
+  - If the value is divisible by 2, print “Two!”
+  - If the value is divisible by 3, print “Three!”
+  - If the value is divisible by 2 and 3, print “Six!”.
+  - Don’t print anything else.
+  - Otherwise, print “Never mind”.
+
+### Controls ex3
+
+- Start a new program. In main, declare an int variable called total.
+- Write a for loop that uses a variable named i to iterate from 0 (inclusive) to 10 (exclusive).
+- The body of the for loop should be as follows:
+
+```go
+total := total + i
+fmt.Println(total)
+```
+
+- After the for loop, print out the value of total.
+- What is printed out?
+- What is the likely bug in this code?
