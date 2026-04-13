@@ -114,3 +114,57 @@ func main() {
 ```
 
 ## Composite types
+
+### Composite types ex1
+
+- Write a program that defines a variable named greetings of type slice of strings with the following values: "Hello", "Hola", "नमस्कार", "こんにちは", and "Привіт". 
+- Create a subslice containing the first two values; 
+- a second subslice with the second, third, and fourth values; 
+- and a third subslice with the fourth and fifth values. 
+- Print out all four slices.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	greetings := []string{"Hello", "Hola", "नमस्कार", "こんにちは", "Привіт"}
+	first2 := greetings[0:2]
+	firstMid := greetings[1:4]
+	last2 := greetings[3:]
+
+	fmt.Println("First 2 slice:", first2)
+	fmt.Println("Middle  slice:", firstMid)
+	fmt.Println("Last 2 slice:", last2)
+}
+```
+
+### Composite types ex2
+
+- Write a program that defines a string variable called message with the value "Hi 😂 and 😭" 
+- and prints the fourth rune in it as a character, not a number.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	msg := "Hi 😂 and 😭"
+	// convert to rune slice
+	runes := []rune(msg)
+	// print the 4th rune
+	fmt.Printf("%c\n", runes[3])
+	fmt.Printf("%c\n", runes[9])
+}
+```
+
+### Composite types ex3
+
+- Write a program that defines a struct called Employee with three fields: firstName, lastName, and id. 
+- The first two fields are of type string, and the last field (id) is of type int. 
+- Create three instances of this struct using whatever values you’d like. 
+- Initialize the first one using the struct literal style without names, the second using the struct literal style with names, and the third with a var declaration. 
+- Use dot notation to populate the fields in the third struct. 
+- Print out all three structs.
