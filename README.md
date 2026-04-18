@@ -410,3 +410,108 @@ func main() {
 ```
 
 ## Types, methods and interfaces
+
+### Types ex1
+
+- You have been asked to manage a basketball league and are going to write a program to help you. Define two types.
+- The first one, called Team, has a field for the name of the team and a field for the player names.
+- The second type is called League and has a field called Teams for the teams in the league and a field called Wins that maps a team’s name to its number of wins.
+
+```go
+type Team struct {
+	Name    string
+	Players []string
+}
+
+type League struct {
+	Teams []Team
+	Wins  map[string]int
+}
+```
+
+### Types ex2
+
+- Add two methods to League.
+- The first method is called MatchResult.
+- It takes four parameters:
+  - the name of the first team,
+  - its score in the game,
+  - the name of the second team,
+  - and its score in the game.
+- This method should update the Wins field in League.
+- Add a second method to League called Ranking that returns a slice of the team names in order of wins.
+- Build your data structures and call these methods from the main function in your program using some sample data.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+type Team struct {
+	Name    string
+	Players []string
+}
+
+type League struct {
+	Teams []Team
+	Wins  map[string]int
+}
+
+func (l *League) MatchResult(t1 string, p1 int, t2 string, p2 int) {
+	if p1 > p2 {
+		l.Wins[t1]++
+		l.Wins[t2] += 0
+	} else {
+		l.Wins[t2]++
+	}
+}
+
+func (l League) Ranking() []string {
+	keys := make([]string, 0, len(l.Teams))
+	for k := range l.Wins {
+		keys = append(keys, k)
+	}
+
+	sort.SliceStable(keys, func(i, j int) bool {
+		return l.Wins[keys[i]] > l.Wins[keys[j]]
+	})
+
+	return keys
+}
+
+func main() {
+	celtics := Team{
+		Name: "Celtics",
+	}
+	lakers := Team{
+		Name: "Lakers",
+	}
+	nuggets := Team{
+		Name: "Nuggets",
+	}
+	teams := []Team{celtics, lakers, nuggets}
+
+	nba := League{
+		Teams: teams,
+		Wins:  make(map[string]int, len(teams)),
+	}
+
+	nba.MatchResult(celtics.Name, 110, lakers.Name, 99)
+	nba.MatchResult(celtics.Name, 100, nuggets.Name, 98)
+	nba.MatchResult(lakers.Name, 80, nuggets.Name, 111)
+	fmt.Println(nba.Ranking())
+
+}
+```
+
+### Types ex3
+
+- Define an interface called Ranker that has a single method called Ranking that returns a slice of strings.
+- Write a function called RankPrinter with two parameters,
+  - the first of type Ranker and
+  - the second of type io.Writer.
+- Use the io.WriteString function to write the values returned by Ranker to the io.Writer, with a newline separating each result.
+- Call this function from main.
