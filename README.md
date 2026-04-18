@@ -249,3 +249,164 @@ func main() {
     fmt.Println(helloPrefix("Maria")) // should print Hello Maria
 }
 ```
+
+## Pointers
+
+### Pointers ex1
+
+- Create a struct named Person with three fields: FirstName and LastName of type string and Age of type int.
+- Write a function called MakePerson that takes in firstName, lastName, and age and returns a Person.
+- Write a second function MakePersonPointer that takes in firstName, lastName, and age and returns a \*Person.
+- Call both from main.
+- Compile your program with go build -gcflags="-m".
+- This both compiles your code and prints out which values escape to the heap.
+- Are you surprised about what escapes?
+
+```go
+package main
+
+import "fmt"
+
+type Person struct {
+	FirstName string
+	LastName  string
+	Age       int
+}
+
+func MakePerson(firstName, lastName string, age int) Person {
+	return Person{
+		FirstName: firstName,
+		LastName:  lastName,
+		Age:       age,
+	}
+}
+
+func MakePersonPointer(firstName, lastName string, age int) *Person {
+	return &Person{
+		FirstName: firstName,
+		LastName:  lastName,
+		Age:       age,
+	}
+}
+
+func main() {
+	mario := MakePerson("mario", "lazzari", 51)
+	fmt.Println("Mario", mario)
+
+	marioPtr := MakePersonPointer("mario", "lazzari", 51)
+	fmt.Println("Mario pointer", marioPtr)
+}
+```
+
+### Pointers ex2
+
+- Write two functions.
+- The UpdateSlice function takes in a []string and a string.
+- It sets the last position in the passed-in slice to the passed-in string.
+- At the end of UpdateSlice, print the slice after making the change.
+- The GrowSlice function also takes in a []string and a string.
+- It appends the string onto the slice.
+- At the end of GrowSlice, print the slice after making the change.
+- Call these functions from main.
+- Print out the slice before each function is called and after each function is called.
+- Do you understand why some changes are visible in main and why some changes are not?
+
+```go
+package main
+
+import "fmt"
+
+func UpdateSlice(strings []string, str string) {
+	size := len(strings)
+	if size == 0 {
+		strings = append(strings, str)
+	} else {
+		strings[size-1] = str
+	}
+	fmt.Println("inside UpdateSlice:", strings)
+}
+
+func GrowSlice(strings []string, str string) {
+	strings = append(strings, str)
+	fmt.Println("inside GrowSlice:", strings)
+}
+
+func main() {
+	// --- UpdateSlice (change visible)
+	names := []string{"Mario", "Maria"}
+	fmt.Println("before UpdateSlice:", names)
+	UpdateSlice(names, "Mariarosa")
+	fmt.Println("after  UpdateSlice:", names)
+
+	// --- GrowSlice (change not visible)
+	names = []string{"Mario", "Maria"}
+	fmt.Println("\nbefore GrowSlice:", names)
+	GrowSlice(names, "Mariarosa")
+	fmt.Println("after  GrowSlice:", names)
+
+	// empty slice
+	names = []string{}
+	fmt.Println("\nbefore UpdateSlice (empty):", names)
+	UpdateSlice(names, "Mariarosa")
+	fmt.Println("after  UpdateSlice (empty):", names)
+}
+```
+
+### Pointers ex3
+
+- Write a program that builds a []Person with 10,000,000 entries (they could all be the same names and ages).
+- See how long it takes to run.
+- Change the value of GOGC and see how that affects the time it takes for the program to complete.
+- Set the environment variable GODEBUG=gctrace=1 to see when garbage collections happen and see how changing GOGC changes the number of garbage collections.
+- What happens if you create the slice with a capacity of 10,000,000?
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type Person struct {
+	FirstName string
+	LastName  string
+	Age       int
+}
+
+const N = 10_000_000
+
+func main() {
+	start := time.Now()
+
+	var people []Person
+	for range N {
+		people = append(people, Person{
+			FirstName: "Mario",
+			LastName:  "Lazzari",
+			Age:       51,
+		})
+	}
+
+	elapsed := time.Since(start)
+	fmt.Println("size:", len(people))
+	fmt.Println("time:", elapsed)
+
+	start = time.Now()
+
+	people = make([]Person, N)
+	for i := range N {
+		people[i] = Person{
+			FirstName: "Mario",
+			LastName:  "Lazzari",
+			Age:       51,
+		}
+	}
+
+	elapsed = time.Since(start)
+	fmt.Println("size with make:", len(people))
+	fmt.Println("time with make:", elapsed)
+}
+```
+
+## Types, methods and interfaces
