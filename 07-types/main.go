@@ -2,8 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"sort"
 )
+
+type Ranker interface {
+	Ranking() []string
+}
 
 type Team struct {
 	Name    string
@@ -37,6 +43,12 @@ func (l League) Ranking() []string {
 	return keys
 }
 
+func RankPrinter(r Ranker, w io.Writer) {
+	for _, team := range r.Ranking() {
+		io.WriteString(w, team+"\n")
+	}
+}
+
 func main() {
 	celtics := Team{
 		Name: "Celtics",
@@ -57,6 +69,10 @@ func main() {
 	nba.MatchResult(celtics.Name, 110, lakers.Name, 99)
 	nba.MatchResult(celtics.Name, 100, nuggets.Name, 98)
 	nba.MatchResult(lakers.Name, 80, nuggets.Name, 111)
+
+	// direct print
 	fmt.Println(nba.Ranking())
 
+	// via interface + writer
+	RankPrinter(nba, os.Stdout)
 }
