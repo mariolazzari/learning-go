@@ -515,3 +515,114 @@ func main() {
   - the second of type io.Writer.
 - Use the io.WriteString function to write the values returned by Ranker to the io.Writer, with a newline separating each result.
 - Call this function from main.
+
+```go
+package main
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"sort"
+)
+
+type Ranker interface {
+	Ranking() []string
+}
+
+type Team struct {
+	Name    string
+	Players []string
+}
+
+type League struct {
+	Teams []Team
+	Wins  map[string]int
+}
+
+func (l *League) MatchResult(t1 string, p1 int, t2 string, p2 int) {
+	if p1 > p2 {
+		l.Wins[t1]++
+		l.Wins[t2] += 0
+	} else {
+		l.Wins[t2]++
+	}
+}
+
+func (l League) Ranking() []string {
+	keys := make([]string, 0, len(l.Teams))
+	for k := range l.Wins {
+		keys = append(keys, k)
+	}
+
+	sort.SliceStable(keys, func(i, j int) bool {
+		return l.Wins[keys[i]] > l.Wins[keys[j]]
+	})
+
+	return keys
+}
+
+func RankPrinter(r Ranker, w io.Writer) {
+	for _, team := range r.Ranking() {
+		io.WriteString(w, team+"\n")
+	}
+}
+
+func main() {
+	celtics := Team{
+		Name: "Celtics",
+	}
+	lakers := Team{
+		Name: "Lakers",
+	}
+	nuggets := Team{
+		Name: "Nuggets",
+	}
+	teams := []Team{celtics, lakers, nuggets}
+
+	nba := League{
+		Teams: teams,
+		Wins:  make(map[string]int, len(teams)),
+	}
+
+	nba.MatchResult(celtics.Name, 110, lakers.Name, 99)
+	nba.MatchResult(celtics.Name, 100, nuggets.Name, 98)
+	nba.MatchResult(lakers.Name, 80, nuggets.Name, 111)
+
+	// direct print
+	fmt.Println(nba.Ranking())
+
+	// via interface + writer
+	RankPrinter(nba, os.Stdout)
+}
+```
+
+## Generics
+
+### Generics ex1
+
+- Write a generic function that doubles the value of any integer or float that’s passed in to it.
+- Define any needed generic interfaces.
+
+### Generics ex2
+
+- Define a generic interface called Printable that matches a type that implements fmt.Stringer and has an underlying type of int or float64.
+- Define types that meet this interface.
+- Write a function that takes in a Printable and prints its value to the screen using fmt.Println.
+
+### Generics ex3
+
+- Write a generic singly linked list data type.
+- Each element can hold a comparable value and has a pointer to the next element in the list.
+- The methods to implement are as follows:
+
+```go
+// adds a new element to the end of the linked list
+Add(T)
+// adds an element at the specified position in the linked list
+Insert(T, int)
+// returns the position of the supplied value, -1 if it's not present
+Index (T) int
+```
+
+## Errors
