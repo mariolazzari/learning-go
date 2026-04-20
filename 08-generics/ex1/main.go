@@ -9,10 +9,6 @@ type Number interface {
 		~float32 | ~float64
 }
 
-type Num interface {
-	int | float32 | float64
-}
-
 func double[T Number](n T) T {
 	return 2 * n
 }
