@@ -1304,3 +1304,73 @@ git tag v2.0.0
 git push origin main
 git push origin v2.0.0
 ```
+
+## Tooling
+
+### Tooling ex1
+
+- Go to the UN’s Universal Declaration of Human Rights (UDHR) page and copy the text of the UDHR into a text file called english_rights.txt. - Click the Other Languages link and copy the document text in a few additional languages into files named LANGUAGE_rights.txt. 
+- Create a program that embeds these files into package-level variables. 
+- Your program should take in one command-line parameter, the name of a language. 
+- It should then print out the UDHR in that language.
+
+```go
+package main
+
+import (
+	_ "embed"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+)
+
+//go:embed udhr/en.txt
+var english string
+
+//go:embed udhr/it.txt
+var italian string
+
+// registry mapping language -> text
+var rightsByLang = map[string]string{
+	"en": english,
+	"it": italian,
+}
+
+func main() {
+	// check pamars
+	if len(os.Args) < 2 {
+		log.Fatal("Missing lang param (it | en)")
+	}
+	lang := strings.ToLower(os.Args[1])
+
+	text, ok := rightsByLang[lang]
+	if !ok {
+		log.Fatalf("unsupported language: %s", lang)
+	}
+
+	fmt.Println(text)
+}
+```
+
+### Tooling ex2
+
+- Use go install to install staticcheck. 
+- Run it against your program and fix any problems it finds.
+
+```sh
+go install honnef.co/go/tools/cmd/staticcheck@latest
+staticcheck -version
+staticcheck ./...
+```
+
+### Tooling ex3
+
+- Cross-compile your program for ARM64 on Windows. 
+- If you are using an ARM64 Windows computer, cross-compile for AMD64 on Linux.
+
+```sh
+set GOOS=windows
+set GOARCH=arm64
+go build -o udhr.exe .
+```
