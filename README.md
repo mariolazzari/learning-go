@@ -1221,3 +1221,86 @@ func ValidateEmployee(e Employee) error {
 	}
 }
 ```
+
+## Modules
+
+### Modules ex1
+
+- Create a module in your own public repository. 
+- This module has a single function named Add with two int parameters and one int return value. 
+- This function adds the two parameters together and returns them. 
+- Make this version v1.0.0.
+
+```sh
+go mod init github.com/mariolazzari/learning-go/10-modules/ex1
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+```go
+package math
+
+// Add returns the sum of two integers.
+func Add(a, b int) int {
+	return a + b
+}
+```
+
+### Modules ex2
+
+- Add godoc comments to your module that describe the package and the Add function. 
+- Be sure to include a link to https://www.mathsisfun.com/numbers/addition.html in your Add function godoc. 
+- Make this version v1.0.1.
+
+```go
+package math
+
+// Add returns the sum of two integers.
+//
+// Addition reference:
+// https://www.mathsisfun.com/numbers/addition.html
+func Add(a, b int) int {
+	return a + b
+}
+```
+
+```sh
+git add .
+git commit -m "Add package and function godoc comments"
+git tag v1.0.1
+git push origin main
+git push origin v1.0.1
+```
+
+### Modules ex3
+
+Change Add to make it generic. 
+Import the golang.org/x/exp/constraints package. 
+Combine the Integer and Float types in that package to create an interface called Number. 
+Rewrite Add to take in two parameters of type Number and return a value of type Number. 
+Version your module again. 
+Because this is a backward-breaking change, this should be v2.0.0 of your module.
+
+```go
+package math
+
+import "golang.org/x/exp/constraints"
+
+type Number interface {
+	constraints.Float | constraints.Integer
+}
+
+// Add returns the sum of two integers.
+//
+// Addition reference:
+// https://www.mathsisfun.com/numbers/addition.html
+func Add[T Number](a, b T) T {
+	return a + b
+}
+```
+
+```sh
+git tag v2.0.0
+git push origin main
+git push origin v2.0.0
+```
