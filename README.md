@@ -1524,5 +1524,81 @@ func main() {
 - Use sync.OnceValue to generate a function that caches the map returned by this function and use the cached value to look up square roots for every 1,000th number from 0 to 100,000.
 
 ```go
+package main
 
+import (
+	"fmt"
+	"math"
+	"sync"
+	"time"
+)
+
+const (
+	MAX   = 100_000
+	CHUNK = 1000
+)
+
+func buildSqrtMap() map[int]float64 {
+	result := make(map[int]float64, MAX)
+
+	for i := range MAX {
+		result[i] = math.Sqrt(float64(i))
+	}
+
+	return result
+}
+
+func main() {
+	start := time.Now()
+	// The map is generated only once and then cached.
+	sqrtMap := sync.OnceValue(buildSqrtMap)
+
+	// First call initializes the cache.
+	cache := sqrtMap()
+
+	fmt.Println(time.Since(start))
+
+	// Read every chunk value.
+	for i := 0; i < MAX; i += CHUNK {
+		fmt.Printf("sqrt(%d) = %.4f\n", i, cache[i])
+	}
+}
+```
+
+## Starndard library
+
+### Stdlib ex1
+
+- Write a small web server that returns the current time in RFC 3339 format when you send it a GET command. 
+- You can use a third-party module if you’d like.
+
+```go
+```
+
+### Stdlib ex2
+
+- Write a small middleware component that uses JSON structured logging to log the IP address of each incoming request to your web server.
+
+```go
+```
+
+### Stdlib ex3
+
+- Add the ability to return the time as JSON. 
+- Use the Accept header to control whether JSON or text is returned (default to text). 
+- The JSON should be structured as follows
+
+```json
+{
+    "day_of_week": "Monday",
+    "day_of_month": 10,
+    "month": "April",
+    "year": 2023,
+    "hour": 20,
+    "minute": 15,
+    "second": 20
+}
+```
+
+```go
 ```
