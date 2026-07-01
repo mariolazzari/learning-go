@@ -1602,3 +1602,127 @@ func main() {
 
 ```go
 ```
+
+## Standard library
+
+### Http package
+
+#### Http client
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"time"
+)
+
+type Post struct {
+	UserId int    `json:"userId"`
+	Id     int    `json:"id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+}
+
+func main() {
+	// client
+	client := http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	// request
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://jsonplaceholder.typicode.com/posts/1", nil)
+	if err != nil {
+		log.Fatalf("request: %v", err)
+	}
+	req.Header.Add("X-My-Client", "Learing Go")
+
+	// response
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatalf("response: %v", err)
+	}
+	defer res.Body.Close()
+
+	// response status
+	if res.StatusCode != http.StatusOK {
+		log.Fatalf("unexpected status: %s", res.Status)
+	}
+
+	// decode body
+	var post Post
+	err = json.NewDecoder(res.Body).Decode(&post)
+	if err != nil {
+		log.Fatalf("post decode: %v", err)
+	}
+
+	fmt.Printf("Post title: %s\n\n", post.Title)
+	fmt.Printf("Post: %+v\n", post)
+}
+```
+
+#### Http server
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"log/slog"
+	"net/http"
+	"time"
+)
+
+// handler
+func handleHello(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Ciao Mario"))
+}
+
+// handler
+func handleGreat(w http.ResponseWriter, r *http.Request) {
+	name := r.PathValue("name")
+	fmt.Fprintf(w, "Ciao %s\n", name)
+}
+
+// middleware
+func RequestTimer(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		h.ServeHTTP(w, r)
+		dur := time.Since(start)
+		slog.Info("request time",
+			"path", r.URL.Path,
+			"duration", dur)
+	})
+}
+
+func main() {
+	// router
+	mux := http.NewServeMux()
+	// handlers
+	mux.HandleFunc("GET /hello", handleHello)
+	mux.HandleFunc("GET /hello/{name}", handleGreat)
+	// middlewares
+	wrappedMux := RequestTimer(mux)
+
+	// server
+	srv := http.Server{
+		Addr:         ":8081",
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 60 * time.Second,
+		IdleTimeout:  90 * time.Second,
+		Handler:      wrappedMux,
+	}
+
+	// start server
+	err := srv.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		log.Fatalf("server: %v", err)
+	}
+}
+```
